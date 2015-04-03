@@ -34,7 +34,7 @@ class RegisterPresenter extends BasePresenter {
         $form = new Form();
         $form->addUpload('avatar', 'Fotka:')
                 ->addRule(Form::IMAGE, 'Súbor musí být JPEG, PNG nebo GIF.');
-        $form->addSubmit('send', 'Odoslať fotku');
+        $form->addSubmit('send', 'Zmeniť profilovú fotku');
         $form->onSuccess[] = array($this, 'sendPhoto');
         return $form;
     }
