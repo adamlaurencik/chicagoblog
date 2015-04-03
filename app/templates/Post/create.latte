@@ -1,0 +1,20 @@
+
+{block content}
+        <div class="col-md-8 col-sm-12 headline  img-responsive" >  
+        <div class="big-post main-post">
+            {form createPost}
+                <div class="title-text stripped-background" > {input title class=>'transparent-input' ,style=>'width: 100%;', value=>"{$title}"} <a  n:href="Homepage:default" class="back"><span class="glyphicon glyphicon-arrow-left"></span>Späť</a></div>
+            <div align="right" style="margin-right: 10px;"><font size="1"><i> 20.12 by <span class="glyphicon glyphicon-user"></span> {$user->getIdentity()->data['username']}</i></font></div>
+            <div style="position: relative;">
+                <img src="{$basePath}/images/posts/{$photo}" class="img-responsive"/>
+            {input image class=>'filestyle', data-badge=>'false'}
+            </div>
+            <div class="post-content">
+                {input description class=>'transparent-input' ,style=>'width: 100%;',onkeyup=>'adjustHeight(this)'}
+                {input content class=>'transparent-input' ,style=>'width: 100%;',onkeyup=>'adjustHeight(this)'}
+                {input send class=>'btn'}
+                </div>
+           {/form}
+            
+        </div>
+        </div>

@@ -1,0 +1,39 @@
+
+{block content} 
+{snippet main}
+<div class="col-md-8 col-sm-12 headline img-responsive" >  
+    
+    <div class="big-post" width="100%">
+            <a n:href="Post:create $latest->id" n:if="$user->isInRole('admin')"><div class="edit-main-big"><span class="glyphicon glyphicon-edit"></span>Upraviť</div></a>
+            <a class="ajax" n:href="delete! $latest->id" n:if="$user->isInRole('admin')"><div class="delete-main"><span class="glyphicon glyphicon-remove"></span></div></a>
+            <a n:href="Post:show $latest->id">
+            <img src="{$basePath}/images/posts/{$latest->photo}" class="img-responsive" width="100%" />
+            <div class="text stripped-background" > {$latest->title}</div></a>
+        </div>
+    {snippet posts}
+    <div class="small-posts container-fluid">
+        {foreach $posts as $post}        
+        <div class="outer col-lg-4 col-xs-6 col-md-6"><a>               
+                <div class="post" >
+                    <a n:href="Post:show $post->id"><div class="stripped-background"><center><span class="post-title">{$post->title}</span></center> <a n:href="delete! $post->id" n:if="$user->isInRole('admin')"><div class="ajax delete-main"><span class="glyphicon glyphicon-remove"></span></div></a></div></a>
+                    <center><a n:href="Post:show $post->id"><img src="{$basePath}/images/posts/{$post->photo}" width="100%" height="120px"/></a></center>
+                    <a n:href="Post:show $post->id"><div class="post-text">{$post->description}</div></a>
+                    <a n:href="Post:create $post->id"n:if="$user->isInRole('admin')"><div class="edit-main"><span class="glyphicon glyphicon-edit"></span>Upraviť</div></a><div class="autor">{$post->created_at|date:'j.n. Y'} by {$presenter->getPerson($post->author)->username}</div>
+                </div>               
+        </div>            
+        {/foreach}
+        <br>
+    </div>
+        <div align="center"">
+            <span>
+                <a n:if="$lastOffset-7>0" class="ajax pagination btn {if $presenter->getOffset()==1}disabled{/if}" n:href="load! $presenter->getOffset()-6"><span class="glyphicon glyphicon-arrow-left"></span></a>
+            </span>
+            <a n:href="Post:create" n:if="$user->isInRole('admin')"> <span class="glyphicon glyphicon-plus"></span>Pridať nový príspevok</a>
+            <span>
+                <a n:if="$lastOffset-7>0" class="ajax pagination btn {if $presenter->getOffset()>=$lastOffset-6}disabled{/if}" n:href="load! $presenter->getOffset()+6"><span class="glyphicon glyphicon-arrow-right"></span></a>
+            </span>
+        </div>  
+     {/snippet}
+</div>
+      {/snippet}
+

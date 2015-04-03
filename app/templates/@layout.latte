@@ -1,0 +1,176 @@
+{**
+ * @param string   $basePath web base path
+ * @param array    $flashes  flash messages
+*}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+
+        <title>{ifset #title}{include title|striptags} | {/ifset}Nette Sandbox</title>
+
+        <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/screen.css">
+        <link rel="stylesheet" media="print" href="{$basePath}/css/print.css">
+        <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="{$basePath}/css/styles.css"/>
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('[data-toggle="popover"]').popover({
+                    placement: 'bottom'
+                });
+                $(function () {
+                    $.nette.init();
+                });
+            });
+
+        </script>
+        <script type="text/javascript">
+            var observe;
+            if (window.attachEvent) {
+                observe = function (element, event, handler) {
+                    element.attachEvent('on' + event, handler);
+                };
+            }
+            else {
+                observe = function (element, event, handler) {
+                    element.addEventListener(event, handler, false);
+                };
+            }
+            function init() {
+                var text = document.getElementById('text');
+                function resize() {
+                    text.style.height = 'auto';
+                    text.style.height = text.scrollHeight + 'px';
+                }
+                /* 0-timeout to get the already changed text */
+                function delayedResize() {
+                    window.setTimeout(resize, 0);
+                }
+                observe(text, 'change', resize);
+                observe(text, 'cut', delayedResize);
+                observe(text, 'paste', delayedResize);
+                observe(text, 'drop', delayedResize);
+                observe(text, 'keydown', delayedResize);
+
+                text.focus();
+                text.select();
+                resize();
+            }
+        </script>
+        {block head}{/block}
+    </head>
+
+    <body>
+        <script> document.documentElement.className += ' js'</script>
+
+        <nav class="container navbar navbar-inverse" role="navigation" >
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand logo" href="#">
+                        <img  height="45px" src="{$basePath}/images/logo.png"/>
+                    </a>
+                    <a class="navbar-brand visible-xs " href="#">
+                        Blackhawks
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse" id="collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a n:href="Homepage:default"><span class="glyphicon glyphicon-home"></span> Domov</a></li>
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tím <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Zápasy</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Hráči</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Tabuľka</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#"><span class="glyphicon glyphicon-earphone"></span> Kontakt</a></li>
+
+                    </ul>
+                    {if !$user->IsLoggedIn()}
+                        {form signInForm class=>'navbar-form navbar-right'}
+
+                            <div class="form-group {if $form->errors}{if $form->errors[0]=='Meno sa nenašlo.'}has-error has-feedback{/if}{/if}">
+                                {input username class=>'form-control input-sm',size=>'10', placeholder=>'Meno', data-toggle=>'popover', data-placement=>'bottom',data-trigger=>'manual'}
+                                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                            </div>
+                            <div class="form-group {if $form->errors}{if $form->errors[0]=='Zadané heslo je zlé.'}has-error has-feedback{/if}{/if}  ">
+                                {input password  class=>'form-control input-sm', size=>'8',  placeholder=>'Heslo', data-toggle=>'popover', data-placement=>'bottom',data-trigger=>'manual'}
+                                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                            </div>
+                            {input send class=>'btn btn-default'}
+                            <a n:href="register:default"> <i>Registrovať</i></a>
+                        {/form}
+                    {else}
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="name">
+                                <img  class="img-rounded" src="{$basePath}/{$user->getIdentity()->data['avatar']}" width="45" height="45" style="margin-top: 3px;"/>
+                                {$user->getIdentity()->data['username']}
+                            </li>
+                            <li class="dropdown hidden-xs">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span><span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a n:href="Sign:out">Odhlásiť</a></li>
+                                    <li><a n:href="register:photo">Zmeniť profilovú fotku</a></li>
+                                </ul>
+                            </li>
+                            <li class="visible-xs"><a href="#">Odhlásiť</a></li>
+                            <li class="visible-xs"><a n:href="register:photo">Zmeniť profilovú fotku</a></li>
+                        </ul>
+                    {/if}
+
+                </div>
+            </div>
+        </nav>
+        <div class="container ">
+            {include content}
+
+            <div class="col-md-4 hidden-xs hidden-sm ">
+                <div class="input-group" style="margin-bottom: 5px;">
+                    <input type="text" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">Hľadať</button>
+                    </span>
+                </div>
+                <div class="games">
+
+                </div>
+                <div class="most-readed ">
+                    <div class="header-text stripped-background">Najobľúbenejšie články:</div>
+                   {snippet best}
+                    <div class="articles">                        
+                            <ol>
+                                <li n:foreach="$best as $key=>$value"><a n:href="Post:show $key">{$presenter->getTitleofPost($key)} <span class="badge">{$value}x</span></a></li>
+                            </ol>                      
+                    </div>
+                    {/snippet}       
+                </div>
+            </div>
+
+            <div class="bottom col-xs-12"><center>&copy; Created by Lauro</center> </div>
+        </div>
+        <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+        {block scripts}
+        <script src="{$basePath}/js/jquery.js"></script>
+        <script src="{$basePath}/js/netteForms.js"></script>
+        <script src="{$basePath}/js/jquery.fine-uploader.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="{$basePath}/js/nette.ajax.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+        <script src="{$basePath}/js/main.js"></script>
+        {/block}
+    </body>
+</html>

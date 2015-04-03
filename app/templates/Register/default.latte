@@ -1,0 +1,38 @@
+{* Latte template *}
+
+{block content}
+<div class="col-md-8 col-sm-12 headline  img-responsive" >  
+    <div class="big-post main-post">
+        <div class="title-text stripped-background" > Registrácia <a  class="back"><span class="glyphicon glyphicon-arrow-left"></span>Späť</a></div>
+        <div class="post-content">
+            <br>
+            <div class="container-fluid">
+                <div class="container-page">
+                    {form register}
+                        <div class="form-group col-lg-12 {if $form->hasErrors()}has-error has-feedback{/if}">
+                        
+                        {label username}{/label}
+                        {input username class=>'form-control', data-toggle=>'popover', data-placement=>'bottom',data-trigger=>'manual'}
+                        <span n:if="$form->hasErrors()" class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" style="margin-right: 10px"></span>
+                        <div class="error help-block" n:if="$form->hasErrors()">Meno už existuje!</div>
+                    </div>
+
+                    <div class="form-group col-lg-12">
+                    {label password}{/label}
+                    {input password class=>'form-control', data-toggle=>'popover', data-placement=>'bottom',data-trigger=>'manual'}
+                </div>
+
+                <div class="form-group col-lg-12">
+                {label contr}{/label}
+                {input contr class=>'form-control', data-toggle=>'popover', data-placement=>'bottom',data-trigger=>'manual'}
+            </div>
+            <div class="form-group col-lg-12">
+                {input send class=>'btn btn-danger'}
+            </div>
+        {/form}
+    </div>
+</div>
+
+</div>
+</div>
+</div>

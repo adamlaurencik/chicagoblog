@@ -1,0 +1,77 @@
+{* Latte template *}
+
+{block content}
+<div class="col-md-8 col-sm-12 headline  img-responsive" >
+    <div class="big-post main-post">
+        <div class="title-text stripped-background" > {$post->title} <a n:href="Post:create $post->id"n:if="$user->isInRole('admin')"><span class="glyphicon glyphicon-edit" style="color:blue;font-size: 20px;">
+                </span></a><a class="ajax" n:href="homepage:delete $post->id" n:if="$user->isInRole('admin')"> <span style="color:red;font-size: 20px;" class="glyphicon glyphicon-remove"></span></a>
+            <a  class="back" n:href="Homepage:default"><span class="glyphicon glyphicon-arrow-left"></span>Späť</a></div>
+        <div align="right" style="margin-right: 10px;"><font size="1"><i> {$post->created_at|date:'j.n.Y '} by  <span class="glyphicon glyphicon-user"></span> {$presenter->getPerson($post->author)->username} </i></font></div>
+        <center><img src="{$basePath.'/images/posts/'.$post->photo}" class="img-responsive"/></center>
+        <div n:snippet="counts" class="likes">
+            <span color="blue" style="text-align: left">{$presenter->getLikes($post->id,'l')} ľuďom sa to páči <span class="glyphicon glyphicon-thumbs-up"> </span> </span>
+            <span color="red" style="position:absolute;right: 0;">{$presenter->getLikes($post->id,'u')} ľuďom sa to nepáči <span class="glyphicon glyphicon-thumbs-down"></span></span>
+        </div>
+        <br>
+        <div class="desc">
+            <b>  <i> {$post->description}</i> </b>
+        </div>
+        <br>
+        <div class="post-content">
+            {$post->content}
+        </div>
+        {snippet likes}
+            <div  class="likes">
+                {if $user->isLoggedIn()}
+                    <center>
+                        <a n:href="like! $post->id, 'l'" type="button" class="{if $presenter->alreadyliked($post->id,'l')}disabled{/if} btn btn-primary ajax"><span class="glyphicon glyphicon-thumbs-up">Like</span></a>
+                        <a n:href="like! $post->id, 'u'" type="button" class="{if $presenter->alreadyliked($post->id,'u')}disabled{/if} btn btn-danger ajax"><span class="glyphicon glyphicon-thumbs-down">Unlike</span></a>
+                    </center>
+                {else}
+                    <div class="comment-no-login" ><center>Na hodnotenie príspevku sa musíte <a onclick="document.getElementsByName('username')[0].focus();">prihlásiť!</a></center></div>
+                        {/if}
+            </div>
+        {/snippet}
+
+        <div class="comments">
+            {snippet comments}
+            <div class="title-text stripped-background" style="margin-bottom: 10px;"> Komentáre: <br/></div>
+            <center n:if="$comments->count()<1"><div class="big-text"><i><span class="glyphicon glyphicon-thumbs-down"></span> Nenachádza sa tu žiaden komentár.</i><br> <br></div></center>
+            <div n:foreach="$comments as $comment" class="comment container-fluid">
+                <div class="col-xs-3 col-lg-2">
+                    <div width="70px"><img src="{$basePath}/{$presenter->getPerson($comment->user)->avatar}" width="70px" height="70px" style="margin-left: 18px;"/><br/>
+                        <center><b><span class="glyphicon glyphicon-user"></span>{$presenter->getPerson($comment->user)->username}</b></center></div>
+                </div>
+                <div class="col-xs-9 col-lg-10" style="min-height: 90px; padding-bottom: 20px;">
+                    <i>{$comment->content}</i>
+                    <a class="top-right ajax" n:href="deleteComment! $comment->id"n:if="$user->isInRole('admin')">
+                        <span class="glyphicon glyphicon-remove" style="color: red;"></span>
+                    </a><br />
+                    <div class="comment-time">{$comment->created_at|date:'j.n.Y '}</div>
+                </div>
+            </div>
+            <div class="stripped-background title-text-sm">Vložte nový komentár:</div>
+            {/snippet}
+            <br>
+            <div n:if="!$user->isLoggedIn()" class="comment-no-login" ><center>Na vloženie komentára sa musíte <a onclick="document.getElementsByName('username')[0].focus();">prihlásiť!</a></center></div>
+            <div n:if="$user->isLoggedIn()">
+                {form commentForm}
+                    <div class="form-horizontal container-fluid" style="margin-bottom: 50px;">
+                        <div class="form-group ">
+                            <label class="required col-xs-3 col-lg-2 control-label" style="text-align:left; padding-top: 0px;">
+                                <img src="{$basePath.'/'.$user->getIdentity()->avatar}" width="70px" height="70px" style="margin-left: 18px;"/><br/>
+                                <center><b><span class="glyphicon glyphicon-user"></span> {$user->getIdentity()->username}</b></center>
+                            </label>
+                            <div class="required col-xs-9 col-lg-10">
+                                {input comment class=>'form-control'}
+                                {input send class=>'btn btn-default comment-submit'}
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                {/form}
+            </div>
+
+        </div>
+    </div>
+</div>

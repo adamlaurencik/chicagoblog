@@ -1,0 +1,20 @@
+{block content}
+<div class="col-md-8 col-sm-12 headline  img-responsive" >  
+    <div class="big-post main-post">
+        <div class="title-text stripped-background" > Registrácia <a  class="back"><span class="glyphicon glyphicon-arrow-left"></span>Späť</a></div>
+        <div class="post-content">
+            <br>
+            <div class="container-fluid">
+                <div class="container-page">
+                        <img src="{$basePath}/{$user->getIdentity()->data['avatar']}" class="image-responsive img-thumbnail" width="100%" style="margin-bottom: 10px">
+                        {form uploadImage}
+                            <p class="help-block">Vyberte si svoju profilovú fotku.</p>
+                            {input avatar class=>'form-control btn btn-file', data-toggle=>'popover', data-placement=>'bottom',data-trigger=>'manual' }
+                            <div class="row"><div class="col-xs-6">{input send class=>'form-control btn btn-primary'} </div><a n:href="homepage:default" class="btn btn-danger col-xs-6">Potvrdiť</a></div>
+                        {/form}
+                        <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
