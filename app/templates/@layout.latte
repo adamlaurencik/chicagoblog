@@ -139,30 +139,35 @@
             {include content}
 
             <div class="col-md-4 hidden-xs hidden-sm ">
-                <div class="input-group" style="margin-bottom: 5px;">
-                    <input type="text" class="form-control">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">Hľadať</button>
-                    </span>
+                <div class="input-group" style="margin-bottom: 5px; width:100%">
+                    {form search}
+                        <div id="custom-search-input ">
+                            <div class="input-group col-md-12">
+                                {input search class=>'form-control', placeholder=>'Hľadať'}
+                                <span class="input-group-btn">
+                                    {input send class=>'btn btn-danger'}
+                                </span>
+                            </div>
+                        </div>
+                    {/form}
                 </div>
                 <div class="games">
 
                 </div>
                 <div class="most-readed ">
                     <div class="header-text stripped-background">Najobľúbenejšie články:</div>
-                   {snippet best}
-                    <div class="articles">                        
+                    {snippet best}
+                        <div class="articles">                        
                             <ol>
                                 <li n:foreach="$best as $key=>$value"><a n:href="Post:show $key">{$presenter->getTitleofPost($key)} <span class="badge">{$value}x</span></a></li>
                             </ol>                      
-                    </div>
+                        </div>
                     {/snippet}       
                 </div>
             </div>
 
             <div class="bottom col-xs-12"><center>&copy; Created by Lauro</center> </div>
         </div>
-        <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
         {block scripts}
         <script src="{$basePath}/js/jquery.js"></script>
         <script src="{$basePath}/js/netteForms.js"></script>

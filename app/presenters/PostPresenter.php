@@ -20,12 +20,13 @@ class PostPresenter extends BasePresenter {
         $this->database = $database;
     }
 
-    public function renderShow($id) {
+    public function renderShow($id,$word='') {
 
         $post = $this->database->table('posts')->get($id);
         $comments = $post->related('comments')->order('created_at');
         $this->template->post = $post;
         $this->template->comments = $comments;
+        $this->template->word=$word;
     }
 
     public function getPerson($user_id) {

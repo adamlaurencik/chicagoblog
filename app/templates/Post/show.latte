@@ -3,9 +3,10 @@
 {block content}
 <div class="col-md-8 col-sm-12 headline  img-responsive" >
     <div class="big-post main-post">
-        <div class="title-text stripped-background" > {$post->title} <a n:href="Post:create $post->id"n:if="$user->isInRole('admin')"><span class="glyphicon glyphicon-edit" style="color:blue;font-size: 20px;">
+        <div class="title-text stripped-background" > {if $word==''}{$post->title}{else}{$post->title|replaceRE:'/'.$word.'/i','<span class="mark">'.$word.'</span>'|noescape}{/if}  <a n:href="Post:create $post->id"n:if="$user->isInRole('admin')"><span class="glyphicon glyphicon-edit" style="color:blue;font-size: 20px;">
+                  
                 </span></a><a class="ajax" n:href="homepage:delete $post->id" n:if="$user->isInRole('admin')"> <span style="color:red;font-size: 20px;" class="glyphicon glyphicon-remove"></span></a>
-            <a  class="back" n:href="Homepage:default"><span class="glyphicon glyphicon-arrow-left"></span>Späť</a></div>
+            {if $word==''}<a  class="back" n:href="Homepage:default"><span class="glyphicon glyphicon-arrow-left"></span>Späť</a>{else}<a class="back" n:href="Search:default $word"><span class="glyphicon glyphicon-arrow-left"></span>Späť</a>{/if}</div>
         <div align="right" style="margin-right: 10px;"><font size="1"><i> {$post->created_at|date:'j.n.Y '} by  <span class="glyphicon glyphicon-user"></span> {$presenter->getPerson($post->author)->username} </i></font></div>
         <center><img src="{$basePath.'/images/posts/'.$post->photo}" class="img-responsive"/></center>
         <div n:snippet="counts" class="likes">
@@ -14,11 +15,11 @@
         </div>
         <br>
         <div class="desc">
-            <b>  <i> {$post->description}</i> </b>
+            <b>  <i>{if $word==''}{$post->description}{else}{$post->description|replaceRE:'/'.$word.'/i','<span class="mark">'.$word.'</span>'|noescape}{/if}</i> </b>
         </div>
         <br>
         <div class="post-content">
-            {$post->content}
+            {if $word==''}{$post->content}{else}{$post->content|replaceRE:'/'.$word.'/i','<span class="mark">'.$word.'</span>'|noescape}{/if}
         </div>
         {snippet likes}
             <div  class="likes">

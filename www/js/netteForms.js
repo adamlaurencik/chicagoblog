@@ -197,6 +197,7 @@ Nette.isDisabled = function (elem) {
 Nette.addError = function (elem, message) {
     //Displays message in a popover below input
     elem.setAttribute('data-content', message);  
+    elem.setAttribute('data-placement','bottom');
     $('[data-toggle="popover"]').not(elem).popover('hide');
     $(elem).popover('show');
     elem.focus();

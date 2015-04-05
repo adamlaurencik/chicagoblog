@@ -9,9 +9,8 @@ use Nette,
  * Homepage presenter.
  */
 class HomepagePresenter extends BasePresenter {
-
-    private $database;
     private $offset=1;
+    private $database;
     function __construct(Nette\Database\Context $database) {
         $this->database = $database;
     }
@@ -29,6 +28,7 @@ class HomepagePresenter extends BasePresenter {
         $post=$this->database->table('posts')->get($id);
         $post->related('likes')->delete();
         $post->related('comments')->delete();
+        unlink($this->context->parameters['wwwDir'] . '\images\posts\\' . $post->photo);
         $post->delete();
         $this->redrawControl('main');
         $this->redrawControl('best');
@@ -37,7 +37,6 @@ class HomepagePresenter extends BasePresenter {
     public function getPerson($user_id){
         $user= $this->database->table('users')->get($user_id);
         return $user;
-        
     }
     public function getOffset(){
         return $this->offset;

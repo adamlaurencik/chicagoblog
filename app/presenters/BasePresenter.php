@@ -69,15 +69,28 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         $results = array();
         foreach ($posts as $post) {
             $count = $this->database->table('likes')->where('status=? AND post_id=?', 'l', $post->id)->count();
-
             $results[$post->id] = $count;
         }
         arsort($results);
+        $results=array_slice($results, 0, 10, 1);
         return($results);
     }
 
     public function getTitleOfPost($id) {
         return $this->database->table('posts')->get($id)->title;
+    }
+    public function createComponentSearch() {
+        $form = new Form();
+        $form->addText('search')
+                ->setRequired('Zadajte hľadaný výraz!')
+                ->addRule(Form::MIN_LENGTH, 'Hľadajte aspoň tri písmená!', 3);
+        $form->addSubmit('send', 'Hľadať');
+        $form->onSuccess[] = array($this, 'searchformsuceeded');
+        return $form;
+    }
+    public function searchformsuceeded($form){
+        $values=$form->getValues();
+        $this->redirect('Search:default',$values->search);
     }
 
 }
