@@ -1,0 +1,21 @@
+{* Latte template *}
+
+{block content}
+<div class="col-md-8 col-sm-12 headline  img-responsive" >  
+    <div class="big-post main-post">
+        <div class="title-text stripped-background" >Výsledky vyhľadávania:<a n:href="Homepage:default" class="back"><span class="glyphicon glyphicon-arrow-left"></span>Späť</a></div>
+        <br />
+        {snippet posts}
+        <center n:if="$posts->count()<1"><div class="big-text"><i><span class="glyphicon glyphicon-thumbs-down"></span>Nenašla sa žiadna zhoda</i><br> <br></div></center>
+        <div n:foreach="$posts as $post" class="article row">           
+            <a n:href="Post:show $post->id, $word"><div class="col-lg-4 col-md-5 col-xs-5"><img src="{$basePath.'/images/posts/'.$post->photo}"  width="100%" height="115px" style="margin-left: 10px;"/></div></a>
+                <div class="col-lg-8 col-md-7 col-xs-7 " style="min-height: 115px;">
+                    <p class="title-text-sm stripped-background">{$post->title|replaceRE:'/'.$word.'/i','<span class="mark">'.$word.'</span>'|noescape}</p> <a class="ajax"  n:if="$user->isInRole('admin')" n:href="delete! $post->id"><span class="delete-main glyphicon glyphicon-remove" style="right: -7px;"></span></a> 
+                    <p class="description" style="margin-bottom: 20px;">{$post->description|replaceRE:'/'.$word.'/i','<span class="mark">'.$word.'</span>'|noescape}</p>
+                    <a n:if="$user->isInRole('admin')" n:href="Post:create $post->id"><div  class="edit-main"><span class=" glyphicon glyphicon-edit"></span>Zmeniť</div></a>
+                    <div class="autor" style="right: 15px; color: black;">{$post->created_at|date:'j.n.Y '} by {$presenter->getPerson($post->author)->username}</div>
+                </div>
+        </div>
+        {/snippet}
+    </div>
+</div>
